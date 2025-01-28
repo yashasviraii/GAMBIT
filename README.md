@@ -15,7 +15,25 @@ This project explores an adversarial game designed between two AI entities, **De
 The goal was to design a system where two adversarial LLMs interact under the supervision of a Classifier to improve their respective capabilities. By introducing adversarial prompts and optimizing fine-tuning, we aimed to establish a robust pipeline that balances creativity, coherence, and efficiency.
 
 ---
+## Folder Structure
+```
+GAMBIT/
+├── __init__.py
+├── run.py
+└── utils/
+    ├── __init__.py
+    ├── detection.py
+    ├── finetune_Cheater.py
+    ├── finetune_Detective.py
+    ├── finetune_pipeline.py
+    ├── generate_answer.py
+    ├── generate_question.py
+    ├── response_filter.py
+    ├── model_setup.py
+    └── misc.py
+```
 
+---
 ## Datasets  
 ### 1. **HC3 Dataset**  
 - Adapted with Cheater LLM-generated responses replacing ChatGPT outputs.  
