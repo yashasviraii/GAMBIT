@@ -32,7 +32,19 @@ GAMBIT/
     ├── model_setup.py
     └── misc.py
 ```
+---
+## 📌 Running Locally
+```sh
+# Clone the repository
+git clone https://github.com/Cicada-33-01/GAMBIT.git
+cd GAMBIT
 
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the script
+python Run_GAMBIT.py
+```
 ---
 ## Datasets  
 ### 1. **HC3 Dataset**  
