@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath("GAMBIT"))
+
 import GAMBIT
 
 # Run the workflow
