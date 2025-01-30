@@ -1,6 +1,6 @@
 # GAMBIT - Game-based Adversarial Model Improvement Technique
 
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/ModelMystic/GAMBIT) [![Chatbot on Spaces](https://img.shields.io/badge/%F0%9F%A4%96%20Chatbot-Spaces-blue)](https://huggingface.co/spaces/ModelMystic/GAMBIT)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/ModelMystic/GAMBIT) [![Chatbot on Spaces](https://img.shields.io/badge/%F0%9F%A4%96%20Chatbot-Spaces-blue)](https://huggingface.co/spaces/ModelMystic/GAMBIT) [![🤗 Hugging Face Profile](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Profile-orange)](https://huggingface.co/ModelMystic)
 ---
 ## Overview  
 This project explores an adversarial game designed between two AI entities, **Detective LLM** and **Cheater LLM**, with the integration of a **Classifier** to mediate and enhance adversarial interactions. The main objective was to fine-tune each model to become proficient in their respective tasks:
