@@ -49,6 +49,13 @@ pip install -r requirements.txt
 python Run_GAMBIT.py
 ```
 ---
+## 🚀 Model Downloads  
+
+| Model                        | #Total Params | Download |
+|------------------------------|--------------|----------|
+| MAGE Finetuned               | 149M        | [🤗 Hugging Face](https://huggingface.co/ModelMystic/MAGE_finetuned) |
+| Mimic Open-Llama 3B          | 3B           | [🤗 Hugging Face](https://huggingface.co/ModelMystic/Mimic_open_llama_3b) |
+---
 ## Datasets  
 ### 1. **HC3 Dataset**  
 - Adapted with Cheater LLM-generated responses replacing ChatGPT outputs.  
