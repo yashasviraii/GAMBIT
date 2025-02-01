@@ -46,7 +46,6 @@ cd GAMBIT
 pip install -r requirements.txt
 
 # Run the script
-
 python Run_GAMBIT.py run --model <cheater_model_HF_ID> <question_model_HF_ID> <detection_model_HF_ID>
 ```
 ---
