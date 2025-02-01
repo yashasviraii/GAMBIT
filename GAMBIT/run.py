@@ -20,7 +20,7 @@ from transformers import TrainingArguments
 from trl import PPOTrainer, PPOConfig
 from trl.models import AutoModelForSeq2SeqLMWithValueHead
 from transformers import AutoModelForSeq2SeqLM, T5Tokenizer, TrainingArguments, Trainer
-
+import argparse
 
 from utils.finetune_Detective import *
 from utils.finetune_Cheater import *
@@ -32,22 +32,21 @@ from utils.detection import *
 from utils.finetune_pipeline import *
 
 
-MODEL_NAME = "openlm-research/open_llama_3b"
-QUESTION_MODEL_NAME = "google/flan-t5-base"
-DETECTION_MODEL_NAME = "yaful/MAGE"
+#MODEL_NAME = "openlm-research/open_llama_3b"
+#QUESTION_MODEL_NAME = "google/flan-t5-base"
+#DETECTION_MODEL_NAME = "yaful/MAGE"
 device = "cuda" if torch.cuda.is_available() else "cpu"
-MODEL_PATH = r"D:\NLP_test\models\model2_round_13"
+MODEL_PATH = r"GAMBIT\skeleton_model"
 
 
 
-
-def conversation_workflow(num_rounds=15, max_cluster_size=15):
+def conversation_workflow(model_name:str, question_model_name:str, detection_model_name:str, num_rounds=15, max_cluster_size=15):
     print("1")
     max_gen_cluster_size=50
-    model1, tokenizer1 = setup_question_model(QUESTION_MODEL_NAME=QUESTION_MODEL_NAME)
-    model2, tokenizer2 = setup_quantized_model(MODEL_NAME)
+    model1, tokenizer1 = setup_question_model(question_model_name)
+    model2, tokenizer2 = setup_quantized_model(model_name)
     
-    detection_model, detection_tokenizer = setup_detection_model(DETECTION_MODEL_NAME=DETECTION_MODEL_NAME)
+    detection_model, detection_tokenizer = setup_detection_model(detection_model_name)
 
     print("2")
     Cheater_conversations = []
@@ -264,6 +263,17 @@ def conversation_workflow(num_rounds=15, max_cluster_size=15):
     final_df = pd.DataFrame(Cheater_conversations)
     final_df.to_csv('./results/final_conversations_with_detection.csv', index=False)
     return final_df
-
-results_df = conversation_workflow()
-print(results_df)
+def main():
+    parser = argparse.ArgumentParser(description="Run model processing in GAMBIT")
+    parser.add_argument("--model", nargs="+", required=True, help="Model names")
+    
+    args = parser.parse_args()
+    selected_models = args.model
+    model_name = selected_models[0]
+    question_model_name = selected_models[1]
+    detection_model_name = selected_models[2]
+    results_df = conversation_workflow(model_name,question_model_name,detection_model_name)
+    print(results_df)
+    
+if __name__ == "__main__":
+    main()
