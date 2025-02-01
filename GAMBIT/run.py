@@ -19,7 +19,7 @@ from trl import SFTTrainer
 from transformers import TrainingArguments
 from trl import PPOTrainer, PPOConfig
 from trl.models import AutoModelForSeq2SeqLMWithValueHead
-from transformers import AutoModelForSeq2SeqLM, T5Tokenizer, TrainingArguments, Trainer
+from transformers import AutoModelForSeq2SeqLM, T5Tokenizer, TrainingArguments, Trainer, AutoModel
 import argparse
 
 from utils.finetune_Detective import *
@@ -39,8 +39,26 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 MODEL_PATH = r"GAMBIT\skeleton_model"
 
 
+def download_skeleton_model(model_name):
+    skeleton_folder = MODEL_PATH
+    os.makedirs(skeleton_folder, exist_ok=True)  # Ensure the folder exists
+    
+    model_path = os.path.join(skeleton_folder, model_name)
+    
+    if not os.path.exists(model_path):  
+        print(f"Downloading skeleton model: {model_name}...")
+        
+        # Load and save the model from Hugging Face
+        model = AutoModel.from_pretrained(model_name)
+        model.save_pretrained(model_path)
+        
+        print(f"Model saved in: {model_path}")
+    else:
+        print(f"Skeleton model already exists at: {model_path}")
 
-def conversation_workflow(model_name:str, question_model_name:str, detection_model_name:str, num_rounds=15, max_cluster_size=15):
+    return model_path
+
+def conversation_workflow(model_name:str, question_model_name:str, detection_model_name:str, model_path:str, num_rounds=15, max_cluster_size=15):
     print("1")
     max_gen_cluster_size=50
     model1, tokenizer1 = setup_question_model(question_model_name)
@@ -251,7 +269,7 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
                 # break
 
                 if(round == num_rounds-2):
-                    model2 = fine_tune_model(model2, tokenizer2, dataset_filename,MODEL_PATH=MODEL_PATH, output_name=f'model2_round_{round+1}')
+                    model2 = fine_tune_model(model2, tokenizer2, dataset_filename,MODEL_PATH=model_path, output_name=f'model2_round_{round+1}')
                     break
                 model2 = just_fine_tune_model(model2, tokenizer2, dataset_filename, f'model2_round_{round+1}')
 
@@ -272,7 +290,8 @@ def main():
     model_name = selected_models[0]
     question_model_name = selected_models[1]
     detection_model_name = selected_models[2]
-    results_df = conversation_workflow(model_name,question_model_name,detection_model_name)
+    model_path = download_skeleton_model(model_name)
+    results_df = conversation_workflow(model_name,question_model_name,detection_model_name,model_path)
     print(results_df)
     
 if __name__ == "__main__":
