@@ -32,9 +32,6 @@ from utils.detection import *
 from utils.finetune_pipeline import *
 
 
-#MODEL_NAME = "openlm-research/open_llama_3b"
-#QUESTION_MODEL_NAME = "google/flan-t5-base"
-#DETECTION_MODEL_NAME = "yaful/MAGE"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 MODEL_PATH = r"GAMBIT\skeleton_model"
 
@@ -95,10 +92,7 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
             question = "You are a human being and you need to answer this question in the most human like way possible \nQ: " + real_questions_val + "\nA:"
             print(f"Model1's Q: {question}")
             real_questions.append(real_questions_val)
-            # real_questions_val = "Ask an interesting question:" + real_questions_val
             
-
-
             # Generate five response variants and select the best one
             responses = generate_response(model2, tokenizer2, question,num_variants=4)
             best_answer, confidence = select_best_response(detection_model, detection_tokenizer, responses)
@@ -115,8 +109,7 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
             # Calculate running average of confidence scores
             running_avg_confidence = sum(confidence_history) / len(confidence_history)
             print(f"Running Average Confidence: {running_avg_confidence}")
-            # if confidence > 0.95:
-            #   continue
+
             # Store the entry
             if(confidence < running_avg_confidence-0.07):
                 Cheater_entry = {
@@ -147,77 +140,13 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
 
             # When cluster is full, fine-tune the model
             if len(Gen_cluster) == max_gen_cluster_size:
-                # "Ask an interesting question:"
-
-                
-
-
-
-                # Create a DataFrame for fine-tuning
-                # conversation_df = pd.DataFrame(Cheater_cluster)
-                # conversation_df['text'] = conversation_df.apply(lambda row: f"Q: {row['question']} A: {row['answer']}", axis=1)
-
-                # # Save the dataset
-                # dataset_filename = f'./results/formatted_dataset_round_{round+1}.csv'
-                # conversation_df[['text']].to_csv(dataset_filename, index=False)
-
-
-
-                # question_df = pd.DataFrame(Gen_cluster)
-                # question_df['text'] = question_df.apply(lambda row: f"{row['question']}", axis=1)
-
-                # # Save the dataset
-                # dataset_filename2 = f'./results/question_dataset_round_{round+1}.csv'
-                # question_df[['text']].to_csv(dataset_filename2, index=False)
-
-
-
-                # # Create a comprehensive results DataFrame
-                # results_df = pd.DataFrame(Cheater_cluster)
-                # results_df['running_avg_confidence'] = running_avg_confidence
-                # results_filename = f'./results/conversation_results_round_{round+1}.csv'
-                # results_df.to_csv(results_filename, index=False)
-
-                # Fine-tune the model
-
-                
-
-                # a = collect_initial_data(
-                #     model1, tokenizer1,
-                #     model2, tokenizer2,
-                #     detection_model, detection_tokenizer
-                # )
-                # initial_data = pd.concat([initial_data, a], ignore_index=True)
                 word2vec_model = setup_embedding_model(initial_data)
-
-
-                # model1 = finetune_question_generator_with_vector_reward(
-                #     model1,
-                #     tokenizer1,
-                #     real_questions,
-                #     word2vec_model,
-                #     tfidf
-                # )
-
-                # lora_model = finetune_flan_t5_with_lora(model1, tokenizer1,real_questions, dataset_filename2, "generator_model", num_epochs=1, word2vec_model=word2vec_model , tfidf=tfidf)
-                # model1 = finetune_flan_t5_with_RLHF(model1, tokenizer1,real_questions_gen_passed,f'Gen_model2_round_{round+1}',word2vec_model=word2vec_model,tfidf = tfidf)
                 model1 = finetune_detective_with_RLHF(model1, tokenizer1,real_questions_gen_passed,word2vec_model=word2vec_model)
                 
                 real_questions_gen_passed = []
                 Gen_cluster=[]
-                # break
-
-
 
             if len(Cheater_cluster) == max_cluster_size:
-                # "Ask an interesting question:"
-
-                # conversation_df = pd.DataFrame(Cheater_cluster)
-                # conversation_df['text'] = conversation_df.apply(lambda row: f"Ask an interesting question:  {row['question']}", axis=1)
-
-
-
-
 
                 # Create a DataFrame for fine-tuning
                 conversation_df = pd.DataFrame(Cheater_cluster)
@@ -227,46 +156,11 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
                 dataset_filename = f'./results/formatted_dataset_round_{round+1}.csv'
                 conversation_df[['text']].to_csv(dataset_filename, index=False)
 
-
-
-                # question_df = pd.DataFrame(Gen_cluster)
-                # question_df['text'] = question_df.apply(lambda row: f"{row['question']}", axis=1)
-
-                # # Save the dataset
-                # dataset_filename2 = f'./results/question_dataset_round_{round+1}.csv'
-                # question_df[['text']].to_csv(dataset_filename2, index=False)
-
-
-
                 # Create a comprehensive results DataFrame
                 results_df = pd.DataFrame(Cheater_cluster)
                 results_df['running_avg_confidence'] = running_avg_confidence
                 results_filename = f'./results/conversation_results_round_{round+1}.csv'
                 results_df.to_csv(results_filename, index=False)
-
-                # Fine-tune the model
-
-                # initial_data = collect_initial_data(
-                #     model1, tokenizer1,
-                #     model2, tokenizer2,
-                #     detection_model, detection_tokenizer
-                # )
-                # word2vec_model , tfidf= setup_embedding_model(initial_data)
-
-
-                # model1 = finetune_question_generator_with_vector_reward(
-                #     model1,
-                #     tokenizer1,
-                #     real_questions,
-                #     word2vec_model,
-                #     tfidf
-                # )
-
-                # lora_model = finetune_flan_t5_with_lora(model1, tokenizer1,real_questions, dataset_filename2, "generator_model", num_epochs=1, word2vec_model=word2vec_model , tfidf=tfidf)
-                # model1 = finetune_flan_t5_with_lora(model1, tokenizer1, dataset_filename2, f'Gen_model2_round_{round+1}')
-                
-                # Gen_cluster=[]
-                # break
 
                 if(round == num_rounds-2):
                     model2 = fine_tune_model(model2, tokenizer2, dataset_filename,MODEL_PATH=model_path, output_name=f'model2_round_{round+1}')
@@ -281,6 +175,7 @@ def conversation_workflow(model_name:str, question_model_name:str, detection_mod
     final_df = pd.DataFrame(Cheater_conversations)
     final_df.to_csv('./results/final_conversations_with_detection.csv', index=False)
     return final_df
+
 def main():
     parser = argparse.ArgumentParser(description="Run model processing in GAMBIT")
     parser.add_argument("--model", nargs="+", required=True, help="Model names")
